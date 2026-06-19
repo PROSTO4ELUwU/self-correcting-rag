@@ -89,8 +89,36 @@ These are lexically almost identical to grounded answers.
 
 The feature-based critic is excellent at surface/lexical grounding but **cannot
 catch semantically-recombined hallucinations** — they need entailment reasoning,
-not word overlap. This directly motivates the **Phase-2 NLI/transformer critic**
-(see [`ROADMAP.md`](ROADMAP.md)). Knowing *why* a baseline fails is the point.
+not word overlap. This directly motivated the **Phase-2 NLI critic** below.
+
+## Phase 2 — NLI critic + hybrid ensemble 🤖
+
+A small zero-shot **NLI model** (`cross-encoder/nli-deberta-v3-xsmall`) scores
+each answer claim against the context. A claim *contradicted* by the source is a
+hallucination — exactly the signal lexical overlap misses. The **ensemble**
+combines both: the feature critic flags wrong-context answers, the NLI critic
+flags contradictions.
+
+From `python -m experiments.run_phase2`:
+
+| critic        | main-set F1 | hard-case recall | hard precision |
+|---------------|:-----------:|:----------------:|:--------------:|
+| feature       | 0.98        | **4%**           | 1.00 |
+| NLI           | 0.61        | 43%              | 0.81 |
+| **ensemble**  | **0.97**    | **44%**          | 0.85 |
+
+![phase2](assets/phase2_comparison.png)
+
+The ensemble keeps the feature critic's strong main-set F1 **and** lifts
+hard-case recall **4% → 44% (11×)**. The remaining gap (zero-shot xsmall NLI +
+context truncation) is the motivation for Phase 3+ (claim decomposition / a
+fine-tuned or larger NLI model). Knowing *why* a baseline fails — and measurably
+closing part of the gap — is the point.
+
+```bash
+pip install -r requirements-nli.txt   # adds torch + transformers
+python -m experiments.run_phase2
+```
 
 ## Quickstart
 
@@ -118,9 +146,10 @@ src/
   data/real.py         # SQuAD v2 grounding dataset + hard stress set
   critic/features.py   # interpretable grounding features
   critic/model.py      # trainable hallucination critic + metrics
+  critic/nli_critic.py # Phase 2: NLI critic + hybrid ensemble
   rag/pipeline.py      # RAG + self-correction loop
   evaluate.py          # before/after hallucination-rate evaluation
-experiments/run_demo.py   experiments/run_real.py
+experiments/run_demo.py   experiments/run_real.py   experiments/run_phase2.py
 demo/cli.py   app.py (Gradio)
 tests/test_smoke.py
 .github/workflows/ci.yml
@@ -128,8 +157,9 @@ tests/test_smoke.py
 
 ## Roadmap
 
-See [`ROADMAP.md`](ROADMAP.md). Next up: **Phase 2 — replace the feature critic
-with a fine-tuned DeBERTa/NLI model** to close the hard-case gap above.
+See [`ROADMAP.md`](ROADMAP.md). Done: Phase 1 (real data) and Phase 2 (NLI
+critic + ensemble). Next: claim decomposition + a fine-tuned/larger NLI model to
+push hard-case recall past 44%, then real retriever + generator.
 
 ## License
 
