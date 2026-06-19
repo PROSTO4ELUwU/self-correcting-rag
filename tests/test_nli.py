@@ -2,7 +2,7 @@
 
 These need torch + transformers and download a small model, so they are skipped
 unless those deps are installed AND RUN_NLI_TESTS=1 is set (keeps default CI fast
-and offline). Run locally with:  RUN_NLI_TESTS=1 pytest tests/test_nli.py
+and offline). Run locally with: RUN_NLI_TESTS=1 pytest tests/test_nli.py
 """
 import os
 import sys

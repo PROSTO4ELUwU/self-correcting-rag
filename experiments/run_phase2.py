@@ -1,6 +1,6 @@
 """Phase 2 experiment: feature critic vs NLI critic vs hybrid ensemble.
 
-Run:  python -m experiments.run_phase2
+Run: python -m experiments.run_phase2
 Produces a console ablation table, experiments/phase2_metrics.json, and
 assets/phase2_comparison.png (F1 on the main set + recall on hard cases).
 
@@ -24,9 +24,9 @@ from sklearn.model_selection import train_test_split
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.data.real import build_squad_dataset, build_hard_stress_set       # noqa: E402
-from src.critic.model import HallucinationCritic                           # noqa: E402
-from src.critic.nli_critic import NLICritic, EnsembleCritic                # noqa: E402
+from src.data.real import build_squad_dataset, build_hard_stress_set # noqa: E402
+from src.critic.model import HallucinationCritic # noqa: E402
+from src.critic.nli_critic import NLICritic, EnsembleCritic # noqa: E402
 
 
 def _balanced_sample(examples, n_per_class, seed=0):
@@ -69,7 +69,7 @@ def main() -> dict:
         }
 
     print("=" * 78)
-    print("PHASE 2 ABLATION — feature vs NLI vs ensemble")
+    print("PHASE 2 ABLATION - feature vs NLI vs ensemble")
     print("=" * 78)
     print(f"{'critic':10} | {'main F1':>8} {'main AUC':>9} | "
           f"{'hard AUC':>9} {'hard recall':>12} {'hard prec':>10}")
@@ -91,7 +91,7 @@ def main() -> dict:
 def _plot(rows: dict):
     names = list(rows.keys())
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-    fig.suptitle("Phase 2 — adding an NLI critic", fontsize=14, weight="bold")
+    fig.suptitle("Phase 2 - adding an NLI critic", fontsize=14, weight="bold")
 
     ax1.bar(names, [rows[n]["main_f1"] for n in names], color="#4C78A8")
     ax1.set_ylim(0, 1); ax1.set_title("Main-set F1 (easy + medium cases)")

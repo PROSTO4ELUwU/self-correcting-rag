@@ -3,9 +3,9 @@
 Ties together the Phase-3 retriever, a generator, and the critic-driven
 self-correction loop into a single `answer(question)` call.
 
-    retriever.retrieve_context(question)  ->  context
-    generator.generate(question, context) ->  candidate answer
-    SelfCorrectingRAG(critic).answer(...)  ->  flag & repair hallucinations
+    retriever.retrieve_context(question) -> context
+    generator.generate(question, context) -> candidate answer
+    SelfCorrectingRAG(critic).answer(...) -> flag & repair hallucinations
 """
 from __future__ import annotations
 

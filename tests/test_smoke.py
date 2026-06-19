@@ -39,4 +39,4 @@ def test_correction_grounds_answer():
     # take a clearly hallucinated example
     bad = next(e for e in ds if e["label"] == 1)
     trace = rag.answer(bad["question"], bad["context"], bad["answer"])
-    assert trace.final_answer  # non-empty
+    assert trace.final_answer # non-empty

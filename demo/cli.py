@@ -1,6 +1,6 @@
 """Interactive command-line demo of the self-correcting loop (fully offline).
 
-Run:  python -m demo.cli
+Run: python -m demo.cli
 Trains the critic on the bundled synthetic facts, then lets you type a question
 and a candidate answer; the loop flags + repairs hallucinations live.
 """
@@ -28,10 +28,10 @@ def run_example(rag: SelfCorrectingRAG, question: str, context: str, candidate: 
     print(f"candidate : {candidate}")
     print(f"P(halluc) : {trace.proba_history}")
     if trace.was_corrected:
-        print(f"⚠️  flagged as hallucinated -> corrected after {trace.iterations} step(s)")
+        print(f"flagged as hallucinated -> corrected after {trace.iterations} step(s)")
         print(f"final     : {trace.final_answer}")
     else:
-        print("✅ grounded, returned as-is")
+        print("grounded, returned as-is")
 
 
 def main() -> None:

@@ -3,7 +3,7 @@
 Flow:
     question --> retrieve(context) --> generate(answer)
                  --> critic.is_hallucinated(answer, context)?
-                       no  -> return answer
+                       no -> return answer
                        yes -> regenerate (extractive fallback) -> re-check
                               (repeat up to max_iters)
 

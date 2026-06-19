@@ -1,7 +1,7 @@
 """End-to-end evaluation: does the self-correcting loop reduce hallucinations?
 
 We measure the headline metric of the whole project:
-    hallucination_rate BEFORE correction  vs  AFTER correction
+    hallucination_rate BEFORE correction vs AFTER correction
 on a held-out set, using the trained critic both as the in-loop verifier and
 (separately) as the oracle-style judge for reporting.
 

@@ -1,6 +1,6 @@
 """Phase 3 experiment: a real end-to-end RAG (retriever + generator + critic).
 
-Run:  python -m experiments.run_phase3
+Run: python -m experiments.run_phase3
   1. Build a FAISS index over SQuAD v2 paragraphs (dense retriever).
   2. Measure retrieval quality: hit@1/3/5 (gold paragraph in top-k).
   3. Run the full pipeline on real questions with a generator that sometimes
@@ -23,13 +23,13 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.data.real import ensure_squad                       # noqa: E402
-from src.rag.retriever import DenseRetriever                 # noqa: E402
-from src.rag.generator import StubLLMGenerator               # noqa: E402
-from src.rag.rag_system import EndToEndRAG                    # noqa: E402
-from src.critic.model import HallucinationCritic              # noqa: E402
-from src.data.real import build_squad_dataset                # noqa: E402
-from sklearn.model_selection import train_test_split          # noqa: E402
+from src.data.real import ensure_squad # noqa: E402
+from src.rag.retriever import DenseRetriever # noqa: E402
+from src.rag.generator import StubLLMGenerator # noqa: E402
+from src.rag.rag_system import EndToEndRAG # noqa: E402
+from src.critic.model import HallucinationCritic # noqa: E402
+from src.data.real import build_squad_dataset # noqa: E402
+from sklearn.model_selection import train_test_split # noqa: E402
 
 
 def _load_corpus(n_paras: int = 600):
@@ -85,17 +85,17 @@ def main() -> dict:
     n = len(sample)
 
     print("=" * 70)
-    print("PHASE 3 — end-to-end RAG (retriever + generator + critic)")
+    print("PHASE 3 - end-to-end RAG (retriever + generator + critic)")
     print("=" * 70)
-    print(f"Retrieval:  hit@1={hit[1]:.1%}  hit@3={hit[3]:.1%}  hit@5={hit[5]:.1%}")
+    print(f"Retrieval: hit@1={hit[1]:.1%} hit@3={hit[3]:.1%} hit@5={hit[5]:.1%}")
     print(f"End-to-end on {n} real questions (generator hallucinates ~50%):")
-    print(f"   hallucination rate  before={before / n:.1%}  after={after / n:.1%}")
-    print(f"   loop corrected {corrected}/{n} answers")
+    print(f" hallucination rate before={before / n:.1%} after={after / n:.1%}")
+    print(f" loop corrected {corrected}/{n} answers")
     print("\nExample catches:")
     for e in examples:
-        print(f"  Q: {e.question}")
-        print(f"     candidate: {e.trace.initial_answer[:90]}")
-        print(f"     P(halluc): {e.trace.proba_history}  ->  final: {e.trace.final_answer[:80]}")
+        print(f" Q: {e.question}")
+        print(f" candidate: {e.trace.initial_answer[:90]}")
+        print(f" P(halluc): {e.trace.proba_history} -> final: {e.trace.final_answer[:80]}")
     print("=" * 70)
 
     _plot(hit, before / n, after / n)
@@ -107,7 +107,7 @@ def main() -> dict:
 
 def _plot(hit: dict, before: float, after: float):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-    fig.suptitle("Phase 3 — end-to-end RAG", fontsize=14, weight="bold")
+    fig.suptitle("Phase 3 - end-to-end RAG", fontsize=14, weight="bold")
     ks = list(hit.keys())
     ax1.bar([f"hit@{k}" for k in ks], [hit[k] for k in ks], color="#4C78A8")
     ax1.set_ylim(0, 1); ax1.set_title("Dense retrieval quality (SQuAD v2)")

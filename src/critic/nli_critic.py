@@ -22,7 +22,7 @@ from functools import lru_cache
 
 import numpy as np
 
-from .model import CriticMetrics  # reuse the metrics dataclass
+from .model import CriticMetrics # reuse the metrics dataclass
 from sklearn.metrics import (
     precision_score, recall_score, f1_score, roc_auc_score,
     accuracy_score, confusion_matrix,

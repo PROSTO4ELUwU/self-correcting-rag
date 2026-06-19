@@ -1,11 +1,11 @@
 """Real-data experiment on SQuAD v2 + a hard stress test, with plots.
 
-Run:  python -m experiments.run_real
+Run: python -m experiments.run_real
 
 Produces:
   - console report (main metrics + stress-test gap)
   - experiments/real_run_metrics.json
-  - assets/results.png   (feature importance, before/after, per-source recall, calibration)
+  - assets/results.png (feature importance, before/after, per-source recall, calibration)
 """
 from __future__ import annotations
 
@@ -24,9 +24,9 @@ from sklearn.model_selection import train_test_split
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.data.real import build_squad_dataset, build_hard_stress_set  # noqa: E402
-from src.critic.model import HallucinationCritic                      # noqa: E402
-from src.evaluate import evaluate_loop                                # noqa: E402
+from src.data.real import build_squad_dataset, build_hard_stress_set # noqa: E402
+from src.critic.model import HallucinationCritic # noqa: E402
+from src.evaluate import evaluate_loop # noqa: E402
 
 
 def per_source_recall(critic, examples):
@@ -55,19 +55,19 @@ def main() -> dict:
     hard_recall = per_source_recall(critic, hard)
 
     print("=" * 64)
-    print("SELF-CORRECTING RAG — real data (SQuAD v2)")
+    print("SELF-CORRECTING RAG - real data (SQuAD v2)")
     print("=" * 64)
     print(f"dataset: {len(ds)} | sources: {dict(Counter(e['source'] for e in ds))}")
-    print(f"\n[1] Critic (held-out test):  {metrics}")
-    print(f"    confusion [[TN,FP],[FN,TP]]: {metrics.confusion}")
+    print(f"\n[1] Critic (held-out test): {metrics}")
+    print(f" confusion [[TN,FP],[FN,TP]]: {metrics.confusion}")
     print("\n[2] Per-source accuracy:")
     for s, a in sorted(src_acc.items()):
-        print(f"    {s:<16} {a:.0%}")
+        print(f" {s:<16} {a:.0%}")
     print(f"\n[3] Self-correction loop: before={loop.before_rate:.1%} "
           f"after={loop.after_rate:.1%} (rel. reduction {loop.reduction_rel:.1%})")
     print("\n[4] HARD stress test (recombined-in-context vs grounded):")
-    print(f"    {hard_metrics}")
-    print(f"    recombined_hard caught: {hard_recall.get('recombined_hard', 0):.0%} "
+    print(f" {hard_metrics}")
+    print(f" recombined_hard caught: {hard_recall.get('recombined_hard', 0):.0%} "
           f"<-- the gap a semantic/NLI critic (Phase 2) must close")
     print("=" * 64)
 
@@ -86,7 +86,7 @@ def main() -> dict:
 
 def _make_plots(critic, test, metrics, loop, src_acc, hard_recall):
     fig, axes = plt.subplots(2, 2, figsize=(12, 9))
-    fig.suptitle("Self-Correcting RAG — results on SQuAD v2", fontsize=15, weight="bold")
+    fig.suptitle("Self-Correcting RAG - results on SQuAD v2", fontsize=15, weight="bold")
 
     # (a) feature importance
     fi = critic.feature_importance()

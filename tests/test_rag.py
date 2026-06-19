@@ -1,7 +1,7 @@
 """Tests for the Phase-3 retriever and end-to-end RAG.
 
 Need faiss + sentence-transformers (download a small model), so skipped unless
-installed AND RUN_RAG_TESTS=1. Run:  RUN_RAG_TESTS=1 pytest tests/test_rag.py
+installed AND RUN_RAG_TESTS=1. Run: RUN_RAG_TESTS=1 pytest tests/test_rag.py
 """
 import os
 import sys
