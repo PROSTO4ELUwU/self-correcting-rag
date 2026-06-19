@@ -1,0 +1,5 @@
+# Phase 2 critic: NLI transformer. Heavier deps, optional.
+# Core library + feature critic work without these.
+-r requirements.txt
+torch>=2.0
+transformers>=4.30
