@@ -1,0 +1,4 @@
+# Phase 3 RAG: dense retriever + embeddings. Heavier deps, optional.
+-r requirements.txt
+faiss-cpu>=1.7
+sentence-transformers>=2.2
