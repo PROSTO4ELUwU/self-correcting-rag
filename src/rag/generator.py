@@ -1,13 +1,17 @@
-"""Answer generators behind a common interface, so the RAG system is model-agnostic.
+"""Answer generators behind one small interface.
 
-- ExtractiveGenerator: offline default. Returns the retrieved-context sentence
-  most relevant to the question. Always grounded -> a safe baseline.
-- StubLLMGenerator: simulates a real LLM that *sometimes hallucinates* (corrupts
-  a number/entity). Used to demo the self-correcting loop end-to-end without an
-  API key.
-- OpenAIGenerator: optional real LLM, used only if OPENAI_API_KEY is set.
+Keeping the generator swappable is the whole point: the RAG system never cares
+whether the answer came from a TF-IDF lookup or GPT-4. Three are bundled:
 
-All expose: generate(question, context) -> str
+    ExtractiveGenerator - offline, always grounded. Returns the context sentence
+        closest to the question. A safe baseline.
+    StubLLMGenerator - fakes an LLM that gets it right most of the time and
+        hallucinates the rest, so the demo and the Phase-4 experiments run with
+        no API key.
+    OpenAIGenerator - the real thing, used only when OPENAI_API_KEY is set.
+
+Contract: generate(question, context) -> str, and sample(question, context, n)
+-> list[str] for the best-of-n / self-consistency strategies.
 """
 from __future__ import annotations
 
@@ -23,7 +27,7 @@ def _sentences(text: str) -> list[str]:
 
 
 class ExtractiveGenerator:
-    """Grounded baseline: pick the context sentence most relevant to the question."""
+    """Pick the context sentence most relevant to the question. Always grounded."""
 
     def generate(self, question: str, context: str) -> str:
         from sklearn.feature_extraction.text import TfidfVectorizer
@@ -38,6 +42,10 @@ class ExtractiveGenerator:
             return sents[0]
         sims = cosine_similarity(m[-1], m[:-1]).ravel()
         return sents[int(sims.argmax())]
+
+    def sample(self, question: str, context: str, n: int = 5) -> list[str]:
+        # deterministic, so every draw is the same grounded sentence
+        return [self.generate(question, context)] * n
 
 
 class StubLLMGenerator:
@@ -57,6 +65,11 @@ class StubLLMGenerator:
                 return bad
         return base
 
+    def sample(self, question: str, context: str, n: int = 5) -> list[str]:
+        # each draw rolls the hallucination dice again, so the n drafts vary --
+        # which is exactly what best-of-n / self-consistency need to chew on
+        return [self.generate(question, context) for _ in range(n)]
+
 
 class OpenAIGenerator:
     """Real LLM generator (optional). Requires OPENAI_API_KEY in the environment."""
@@ -75,3 +88,15 @@ class OpenAIGenerator:
         ]
         resp = client.chat.completions.create(model=self.model, messages=msg, temperature=0)
         return resp.choices[0].message.content.strip()
+
+    def sample(self, question: str, context: str, n: int = 5) -> list[str]:
+        from openai import OpenAI
+        client = OpenAI()
+        msg = [
+            {"role": "system", "content": "Answer ONLY from the context in one sentence."},
+            {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"},
+        ]
+        # temperature > 0 so the n completions actually differ
+        resp = client.chat.completions.create(
+            model=self.model, messages=msg, temperature=0.8, n=n)
+        return [c.message.content.strip() for c in resp.choices]
