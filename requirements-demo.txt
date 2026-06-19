@@ -1,0 +1,4 @@
+# Extra deps for the interactive Gradio web demo (app.py).
+# Core library + experiments work without these.
+-r requirements.txt
+gradio>=4.0
