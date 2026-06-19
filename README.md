@@ -120,6 +120,33 @@ pip install -r requirements-nli.txt   # adds torch + transformers
 python -m experiments.run_phase2
 ```
 
+## Phase 3 — real end-to-end RAG 🔍
+
+Replaces the "pass the context in by hand" setup with a **real retrieval +
+generation pipeline**: a dense retriever (sentence-transformer embeddings +
+FAISS) finds passages, a generator answers, and the critic loop guards the
+output — `retrieve → generate → self-correct`.
+
+From `python -m experiments.run_phase3` (600 SQuAD passages):
+
+| Retrieval | hit@1 | hit@3 | hit@5 |
+|-----------|:-----:|:-----:|:-----:|
+| MiniLM + FAISS | 67% | 83% | 90% |
+
+End-to-end on 100 real questions, with a generator that hallucinates ~50% of
+the time: the loop cuts the hallucination rate **42% → 0%**.
+
+![phase3](assets/phase3.png)
+
+```bash
+pip install -r requirements-rag.txt    # adds faiss-cpu + sentence-transformers
+python -m experiments.run_phase3
+```
+
+Generators are swappable (`src/rag/generator.py`): an offline extractive
+baseline, a hallucinating stub for the demo, and an `OpenAIGenerator` that
+activates automatically if `OPENAI_API_KEY` is set.
+
 ## Quickstart
 
 ```bash
@@ -147,9 +174,12 @@ src/
   critic/features.py   # interpretable grounding features
   critic/model.py      # trainable hallucination critic + metrics
   critic/nli_critic.py # Phase 2: NLI critic + hybrid ensemble
+  rag/retriever.py     # Phase 3: dense retriever (embeddings + FAISS)
+  rag/generator.py     # Phase 3: swappable answer generators
+  rag/rag_system.py    # Phase 3: end-to-end retrieve->generate->self-correct
   rag/pipeline.py      # RAG + self-correction loop
   evaluate.py          # before/after hallucination-rate evaluation
-experiments/run_demo.py   experiments/run_real.py   experiments/run_phase2.py
+experiments/run_demo.py   experiments/run_real.py   experiments/run_phase2.py   experiments/run_phase3.py
 demo/cli.py   app.py (Gradio)
 tests/test_smoke.py
 .github/workflows/ci.yml
@@ -157,9 +187,9 @@ tests/test_smoke.py
 
 ## Roadmap
 
-See [`ROADMAP.md`](ROADMAP.md). Done: Phase 1 (real data) and Phase 2 (NLI
-critic + ensemble). Next: claim decomposition + a fine-tuned/larger NLI model to
-push hard-case recall past 44%, then real retriever + generator.
+See [`ROADMAP.md`](ROADMAP.md). Done: Phase 1 (real data), Phase 2 (NLI critic +
+ensemble), Phase 3 (dense retriever + end-to-end RAG). Next: a learning loop
+(self-training / reward) and claim decomposition to push hard-case recall higher.
 
 ## License
 
