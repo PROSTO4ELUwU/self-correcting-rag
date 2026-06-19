@@ -5,11 +5,13 @@ seconds with no API keys. Below is how to grow it into a research-grade,
 portfolio-defining project. Tackle phases in order — each is a self-contained,
 demoable milestone.
 
-## Phase 1 — Real data (replace synthetic) 🎯 *start here*
-- [ ] Add a loader for **RAGTruth** (a real hallucination-annotated RAG dataset)
-      and/or **SQuAD v2** (has unanswerable questions = natural hallucination traps).
-- [ ] Keep the synthetic corruptions as *data augmentation* on top of real data.
-- [ ] Re-run `run_demo` and record the (now harder, more realistic) metrics.
+## Phase 1 — Real data (replace synthetic) ✅ *done*
+- [x] Loader for **SQuAD v2** (`src/data/real.py`) building a grounding dataset.
+- [x] Keep synthetic corruptions as *data augmentation* on top of real data.
+- [x] `experiments/run_real.py` records realistic metrics (F1≈0.99) + plots.
+- [x] Added a **hard stress test** (recombined in-context claims) exposing the
+      lexical critic's limit (~6% recall) — motivates Phase 2.
+- [ ] Stretch: also add **RAGTruth** as a second real source.
 
 ## Phase 2 — Transformer critic 🤖
 - [ ] Replace `GradientBoostingClassifier` with a fine-tuned **DeBERTa-v3** or an
@@ -30,13 +32,13 @@ demoable milestone.
 - [ ] Reward-style optimisation: treat grounding score as a reward and prefer
       answers that maximise it (rejection sampling / best-of-n first, RL later).
 
-## Phase 5 — Evaluation & demo 📊
-- [ ] Benchmark table: hallucination rate, answer quality, latency vs baselines
-      (no-critic RAG, self-consistency, etc.).
-- [ ] Calibration plot for the critic (reliability diagram).
-- [ ] **Live demo** (Gradio/Streamlit): type a question, watch the loop catch and
-      fix a hallucination in real time. Add a GIF to the README.
-- [ ] GitHub Actions CI running `pytest` on every push.
+## Phase 5 — Evaluation & demo 📊 *partially done*
+- [x] Calibration plot for the critic (reliability diagram) — in `run_real`.
+- [x] Per-source detection breakdown + results figure (`assets/results.png`).
+- [x] **Live demo**: interactive CLI (`demo/cli.py`) + Gradio app (`app.py`).
+- [x] GitHub Actions CI running `pytest` + offline demo on every push.
+- [ ] Full benchmark table vs baselines (no-critic RAG, self-consistency).
+- [ ] Record a GIF of the demo and embed it in the README.
 
 ## Stretch ideas
 - [ ] Per-claim citations: highlight exactly which source sentence supports each claim.
