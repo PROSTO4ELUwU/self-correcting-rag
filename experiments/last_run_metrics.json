@@ -1,0 +1,37 @@
+{
+  "dataset_size": 48,
+  "critic": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "roc_auc": 1.0,
+    "confusion": [
+      [
+        4,
+        0
+      ],
+      [
+        0,
+        11
+      ]
+    ]
+  },
+  "feature_importance": {
+    "lexical_overlap": 0.3519,
+    "novel_token_ratio": 0.2721,
+    "tfidf_cosine": 0.02,
+    "number_support": 0.0142,
+    "has_negation": 0.2718,
+    "entity_support": 0.0,
+    "len_ratio": 0.07
+  },
+  "loop": {
+    "n": 15,
+    "before_rate": 0.7333333333333333,
+    "after_rate": 0.0,
+    "corrected": 11,
+    "reduction_abs": 0.7333333333333333,
+    "reduction_rel": 1.0
+  }
+}
