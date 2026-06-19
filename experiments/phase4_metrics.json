@@ -1,0 +1,56 @@
+{
+  "self_training": {
+    "seed_size": 24,
+    "pool_size": 557,
+    "test_size": 249,
+    "label_fraction": 0.04130808950086059,
+    "f1_seed_only": 0.7603305785123967,
+    "f1_self_trained": 0.819672131147541,
+    "f1_full_supervised": 0.8010899182561307,
+    "rounds": [
+      {
+        "round": 1,
+        "train_size": 452,
+        "pseudo_added": 428,
+        "pseudo_correct": 327,
+        "pool_left": 129,
+        "pseudo_accuracy": 0.764018691588785
+      },
+      {
+        "round": 2,
+        "train_size": 528,
+        "pseudo_added": 76,
+        "pseudo_correct": 47,
+        "pool_left": 53,
+        "pseudo_accuracy": 0.618421052631579
+      },
+      {
+        "round": 3,
+        "train_size": 537,
+        "pseudo_added": 9,
+        "pseudo_correct": 7,
+        "pool_left": 44,
+        "pseudo_accuracy": 0.7777777777777778
+      },
+      {
+        "round": 4,
+        "train_size": 539,
+        "pseudo_added": 2,
+        "pseudo_correct": 1,
+        "pool_left": 42,
+        "pseudo_accuracy": 0.5
+      }
+    ]
+  },
+  "decoding": {
+    "n_questions": 120,
+    "n_samples": 6,
+    "rates": {
+      "no_critic": 0.45,
+      "loop": 0.008333333333333333,
+      "self_consistency": 0.10833333333333334,
+      "best_of_n": 0.008333333333333333,
+      "best_of_n+loop": 0.0
+    }
+  }
+}
