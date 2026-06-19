@@ -13,12 +13,15 @@ demoable milestone.
       lexical critic's limit (~6% recall) — motivates Phase 2.
 - [ ] Stretch: also add **RAGTruth** as a second real source.
 
-## Phase 2 — Transformer critic 🤖
-- [ ] Replace `GradientBoostingClassifier` with a fine-tuned **DeBERTa-v3** or an
-      **NLI model** (entailment between context and each answer claim).
-- [ ] Keep the same `HallucinationCritic` interface (`predict_proba`,
-      `is_hallucinated`) so the loop code doesn't change.
-- [ ] Compare feature-baseline vs transformer in an ablation table.
+## Phase 2 — Transformer critic 🤖 ✅ *done*
+- [x] NLI critic (`cross-encoder/nli-deberta-v3-xsmall`) scoring contradiction
+      between context and each answer claim (`src/critic/nli_critic.py`).
+- [x] Kept the critic interface (`predict_proba`, `is_hallucinated`) so the loop
+      is unchanged.
+- [x] **Hybrid ensemble** (feature OR NLI) — `experiments/run_phase2.py`.
+- [x] Ablation table + plot: hard-case recall **4% → 44%** while main F1 stays 0.97.
+- [ ] Stretch: fine-tune DeBERTa on the grounding labels; claim decomposition
+      into atomic facts; try a larger NLI model to push recall further.
 
 ## Phase 3 — Real RAG components 🔍
 - [ ] Real retriever: embed a document corpus with sentence-transformers, index
