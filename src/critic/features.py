@@ -6,13 +6,13 @@ that correlate with hallucination. This keeps the project offline, fast, and
 *explainable* -- you can show WHY an answer was flagged.
 
 Signals:
-  - lexical_overlap   : fraction of answer tokens present in the context
+  - lexical_overlap : fraction of answer tokens present in the context
   - novel_token_ratio : fraction of answer content-tokens NOT in the context
-  - tfidf_cosine      : TF-IDF cosine similarity(answer, context)
-  - number_support    : fraction of numbers in the answer that appear in context
-  - has_negation      : whether the answer contains a negation (flip risk)
-  - entity_support    : fraction of capitalised entities supported by context
-  - len_ratio         : answer length / context length
+  - tfidf_cosine : TF-IDF cosine similarity(answer, context)
+  - number_support : fraction of numbers in the answer that appear in context
+  - has_negation : whether the answer contains a negation (flip risk)
+  - entity_support : fraction of capitalised entities supported by context
+  - len_ratio : answer length / context length
 """
 from __future__ import annotations
 
@@ -85,10 +85,16 @@ class FeatureExtractor:
         if ans_nums:
             number_support = len(ans_nums & ctx_nums) / len(ans_nums)
         else:
-            number_support = 1.0  # no numeric claim -> nothing to contradict
+            number_support = 1.0 # no numeric claim -> nothing to contradict
 
-        has_neg = float(any(n in set(_TOKEN_RE.findall(answer.lower())) or n in answer.lower()
-                            for n in _NEGATIONS))
+        # match negations on whole tokens, not substrings, so "now"/"north"/
+        # "Notre" don't trip "no"/"nor". The "n't" contraction is checked as a
+        # suffix because the tokenizer drops the apostrophe.
+        ans_word_set = set(_TOKEN_RE.findall(answer.lower()))
+        has_neg = float(
+            any(n in ans_word_set for n in _NEGATIONS if n != "n't")
+            or "n't" in answer.lower()
+        )
 
         ans_ents = _entities(answer)
         ctx_lower = context.lower()
