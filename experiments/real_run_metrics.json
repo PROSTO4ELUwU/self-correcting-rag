@@ -1,0 +1,56 @@
+{
+  "dataset_size": 640,
+  "critic": {
+    "accuracy": 0.9895833333333334,
+    "precision": 0.984375,
+    "recall": 1.0,
+    "f1": 0.9921259842519685,
+    "roc_auc": 1.0,
+    "confusion": [
+      [
+        64,
+        2
+      ],
+      [
+        0,
+        126
+      ]
+    ]
+  },
+  "per_source_accuracy": {
+    "wrong_context": 1.0,
+    "grounded": 0.9696969696969697,
+    "corrupted": 1.0
+  },
+  "loop": {
+    "n": 192,
+    "before_rate": 0.6666666666666666,
+    "after_rate": 0.005208333333333333,
+    "corrected": 128,
+    "reduction_abs": 0.6614583333333333,
+    "reduction_rel": 0.9921874999999999
+  },
+  "hard_stress": {
+    "metrics": {
+      "accuracy": 0.5585365853658537,
+      "precision": 0.8461538461538461,
+      "recall": 0.05789473684210526,
+      "f1": 0.10837438423645321,
+      "roc_auc": 0.529988038277512,
+      "confusion": [
+        [
+          218,
+          2
+        ],
+        [
+          179,
+          11
+        ]
+      ]
+    },
+    "recall": {
+      "grounded": 0.990909090909091,
+      "recombined_hard": 0.05789473684210526
+    }
+  }
+}
